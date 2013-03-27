@@ -153,6 +153,8 @@ class BzListTest(ChannelPluginTestCase, PluginTestCaseUtilMixin):
                 " query: ['product:Fedora', 'component:foo']")
 
     def testPollStatusChange(self):
+        self.assertResponse("watchquery test1 product:Fedora component:foo",
+                            "Watching 28 bugs.")
         self.assertResponse("watchpoll test1",
                             "Polled 1 watch.")
         self.assertResponse(
@@ -169,6 +171,8 @@ class BzListTest(ChannelPluginTestCase, PluginTestCaseUtilMixin):
                             "Polled 1 watch.")
 
     def testPollCommentChange(self):
+        self.assertResponse("watchquery test1 product:Fedora component:foo",
+                            "Watching 28 bugs.")
         self.assertResponse("watchpoll test1",
                             "Polled 1 watch.")
         self.assertResponse(

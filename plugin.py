@@ -83,6 +83,13 @@ def _bug_commented_msg(bug):
     return msg
 
 
+def _new_bug_msg(bug):
+    ''' Message printed for new bugs. '''
+    msg = "New bug: " + str(bug.id) + ": "  + bug.short_desc \
+              + ' - ' + bug.url
+    return msg
+
+
 def _snarf_msg(bug):
     ''' Message printed if bug id found in irc chat. '''
     msg = "%d: %s - %s - %d attachments - %d comments - %s" % \
@@ -93,6 +100,8 @@ def _snarf_msg(bug):
 
 def _on_bug_change(oldbug, newbug, irc):
     ''' Report diffs in newbug state compared to oldbug. '''
+    if not oldbug:
+        irc.reply(_new_bug_msg(newbug))
     if oldbug.status != newbug.status:
         irc.reply(_bug_change_msg(newbug))
     elif len(oldbug.longdescs) != len(newbug.longdescs):
@@ -225,7 +234,7 @@ class _Watch(object):
                 try:
                     poll_cb(self.bugs[i], newbugs[i])
                 except IndexError:
-                    pass
+                    poll_cb(None, newbugs[i])
             self._store_bugs(newbugs)
 
     @staticmethod
