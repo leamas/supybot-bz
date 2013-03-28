@@ -1,0 +1,17 @@
+#!/bin/bash
+#
+# Bz pre-commit hook
+#
+
+FILES=$(git diff --cached --name-status | \
+            grep -v ^D | awk '$1 $2 { print $2}' | egrep -e '.py$|.tmpl$')
+[ -z "$FILES" ] && exit 0
+
+pep8 --config pep8.conf $FILES || {
+    echo "pep8 failed ('git commit --no-verify' to override)"
+    exit 1
+}
+pylint --rcfile=pylint.conf $FILES || {
+    echo  "pylint failed ('git commit --no-verify' to override)'"
+    exit 1
+}
