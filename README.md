@@ -66,7 +66,8 @@ Getting started
     <al-bot-test> leamas: The operation succeeded.
 ```
 * In order to work you must add a search string which defines the set of bugs
-  to watch. This is done using the watchquery command
+  to watch. The search string format is as of [3]. Use the watchquery command
+  something like:
 ```
     <leamas> watchquery test1 product:Fedora component:fedora-review
     <al-bot-test> leamas: Watching 28 bugs
@@ -190,4 +191,7 @@ References:
 -----------
 
 [1] python-bugzilla: https://fedorahosted.org/python-bugzilla/
+
 [2] supybot-bugzilla: http://code.google.com/p/supybot-bugzilla
+
+[3] Search string format: https://bugzilla.redhat.com/page.cgi?id=quicksearch.html
