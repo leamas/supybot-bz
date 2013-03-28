@@ -39,6 +39,8 @@ Getting started
 ```
       $ cd plugins
       $ git clone https://github.com/leamas/supybot-bz Bz
+      $ cd Bz
+      $ git-hooks/post-commit
 ```
 
 * Identify yourself for the bot in a *private window*. Creating user +
