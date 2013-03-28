@@ -14,12 +14,11 @@ no way of handling anything near these datasets. In order to be usable
 you must restrain the bugs followed using the `watchquery` command and
 possibly also the `firstbug` configuration option, see below.
 
-There is already a supybot-bugzilla plugin. This plugin differs in
-being based on the python-bugzilla package to access the different
-bugzillas and by not relying on parsing bugmail to find new bugs. The
-net result is that the bz plugin is simpler, but also sacrifices the
-scalability and flexibity of the supybot-bugzilla plugin.
-
+There is already a supybot-bugzilla plugin [2]. Compared to supybot-bugzilla
+the supybot-bz  plugin differs in being based on the python-bugzilla package
+to access the different bugzillas and by not relying on parsing bugmail to
+find new bugs. The net result is that the bz plugin is simpler, but also
+sacrifices the scalability and flexibity of the supybot-bugzilla plugin.
 
 Dependencies
 ------------
@@ -58,7 +57,8 @@ Getting started
 ```
 
 * Bz is governed by a set of watches. Each defines a name, a
-  bugzilla url and a list of channels you want to feed e. g.,
+  bugzilla url and a list of channels you want to feed. Create one using
+  `watchadd` e. g.:
 ```
     <leamas> watchadd test1 http://bugzilla.redhat.com/xmlrpc.cgi  #al-bot-test
     <al-bot-test> leamas: The operation succeeded.
@@ -123,7 +123,7 @@ To see the list of watches:
 Settings for each watch are below these. To see available settings:
 ```
     @config list plugins.bz.watches.test1
-    leamas: channels,  url, query, firstbug
+    leamas: channels, url, query, firstbug
 ```
 
 These variables can be manipulated using the @config command in the same way.
@@ -135,6 +135,8 @@ for @config. However, structural changes is better done by `watchadd` and
 
 Command List
 ------------
+
+Plugin commands:
 
 * `watchadd`: Takes a watch  name, an url and a comma-separated
   list of channels. Creates a watch feeding data to current channel.
@@ -154,6 +156,15 @@ Command List
 
 * `watchhelp` : Display url to help (i. e., this file).
 
+Other useful commands:
+
+* `config plugins.bz.pollPeriod [seconds]`  Read/set the number of seocnds
+   between each attempt to poll the bugzilla instance for changes.
+
+* `config plugins.bz.watches.<watch name>.firstbug [bug id]`. Setting firstbug
+   means "discard all bugs with a number less than firstbug". Used to limit the
+   dataset used.
+
 * `reload Bz`: Read new configuration, restart polling.
 
 
@@ -168,7 +179,13 @@ pylint: (in the Bz directory):
 ```
   $ pylint --rcfile pylint.conf \*.py > pylint.log
 ```
-unit tests - run in supybot home directory
+Unit tests - run in supybot home directory
 ```
   $ supybot-test  plugins/Bz
 ```
+
+References:
+-----------
+
+[1] python-bugzilla: https://fedorahosted.org/python-bugzilla/
+[2] supybot-bugzilla: http://code.google.com/p/supybot-bugzilla
