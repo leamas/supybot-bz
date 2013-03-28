@@ -28,27 +28,25 @@
 
 ###
 
-""" Provides bugzilla product watch capabilities.  """
+""" Provides bugzilla bug tracking capabilities.  """
 
 # pylint: disable=C0103
 # NOTE! __init__.py is created from __init__.py.tmpl by git post-commit hook.
 
 import supybot
+if supybot.world.testing:
+    import test
+
 import Bz.config as config
 import Bz.plugin as plugin
 reload(plugin)      # In case we're being reloaded.
 
-__version__ = "@commit@"
-__author__ = supybot.Author('Alec Leamas', 'leamas', 'leamas@nowhwere.net')
-
 # This is a dictionary mapping supybot.Author instances to lists of
 # contributions.
 __contributors__ = {}
-
-__url__ = 'http://github.com/mmueller/supybot-bz'
-
-if supybot.world.testing:
-    import test
+__version__ = "@commit@"
+__author__ = supybot.Author('Alec Leamas', 'leamas', 'leamas@nowhwere.net')
+__url__ = 'http://github.com/leamas/supybot-bz'
 
 Class = plugin.Class
 configure = config.configure
