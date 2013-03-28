@@ -131,7 +131,7 @@ class _Watch(object):
         from supybot registry.
         """
 
-        self.log = log.getPluginLogger('bzwatch.bug')
+        self.log = log.getPluginLogger('bz.watch')
         self.name = watchname
         self.lock = threading.Lock()
         self.bugs = None
@@ -193,11 +193,11 @@ class _Watch(object):
                 # pylint: disable=E1101
                 start = time.time()
                 proxybugs = self.bugzilla.query(query)
-                self.log.debug("Found: " + str(time.time() - start))
+                self.log.debug("Bz, found: " + str(time.time() - start))
                 if firstbug:
                     proxybugs = [b for b in proxybugs if b.id > firstbug]
                 bugs = self.bugzilla.getbugs([b.id for b in proxybugs])
-                self.log.debug("Loaded: " + str(time.time() - start))
+                self.log.debug("Bz, loaded: " + str(time.time() - start))
             except ssl.SSLError as e:
                 raise BzPluginError(str(e))
         return bugs
@@ -333,7 +333,7 @@ class _Scheduler(object):
     def __init__(self, watches, fetch_done_cb):
         self.watches = watches
         self._fetch_done_cb = fetch_done_cb
-        self.log = log.getPluginLogger('bz.conf')
+        self.log = log.getPluginLogger('bz.scheduler')
         self.fetcher = None
         self.reset()
 
