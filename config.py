@@ -27,23 +27,24 @@
 # POSSIBILITY OF SUCH DAMAGE.
 ###
 
-''' Overall configuration reflecting supybot.bzwatch.* config variables. '''
+''' Overall configuration reflecting plugins.bz.* config variables. '''
 
 # pylint: disable=W0612
 
 from supybot import conf
 from supybot import registry
 
-_URL_TEXT = ''' Bugzilla url e. g. https://bugzilla.redhat.com. '''
+_URL_TEXT = ''' Bugzilla url e. g.,
+ https://bugzilla.redhat.com/xmlrpc.cgi. '''
 
 _CHANNELS_TXT = """ The channels receiving data from a watch. """
 
 _QUERY_TXT = """ A bugzilla query string selecting the bugs being
-monitored e. g., 'product:Fedora component:fedora-review'."""
+ monitored e. g., 'product:Fedora component:fedora-review'."""
 
 _FIRSTBUG_TXT = """The id of the first bug we care about,
-older bugs are silently dropped. Use to limit the number of bugs
-retrieved from bugzilla and related timeouts."""
+ older bugs are silently dropped. Use to limit the number of bugs
+ retrieved from bugzilla and related timeouts."""
 
 _WATCH_OPTIONS = {
     'url':
@@ -99,7 +100,7 @@ conf.registerGlobalValue(Bz, 'watchlist',
            "Internal list of configured watches, please don't touch "))
 
 conf.registerGlobalValue(Bz, 'pollPeriod',
-    registry.NonNegativeInteger(20, """ How often (in seconds) that
+    registry.NonNegativeInteger(600, """ How often (in seconds) that
   bugzillas will be polled for changes. Zero disables periodic polling."""))
 
 
