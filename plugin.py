@@ -53,6 +53,7 @@ from supybot import callbacks
 from supybot import log
 from supybot import schedule
 from supybot import world
+from supybot import ircmsgs
 from supybot.commands import commalist
 from supybot.commands import optional
 from supybot.commands import threading
@@ -98,14 +99,22 @@ def _snarf_msg(bug):
     return msg
 
 
-def _on_bug_change(oldbug, newbug, irc):
+def _send_msg(text, irc, channels):
+    ''' Send text as a to notice to all channels. '''
+    for channel in channels:
+        msg = ircmsgs.notice(channel, text)
+        irc.queueMsg(msg)
+
+
+def _on_bug_change(oldbug, newbug, watch, irc):
     ''' Report diffs in newbug state compared to oldbug. '''
+    channels = config.watch_option(watch.name, 'channels').value
     if not oldbug:
-        irc.reply(_new_bug_msg(newbug))
+        _send_msg(_new_bug_msg(newbug), irc, channels)
     if oldbug.status != newbug.status:
-        irc.reply(_bug_change_msg(newbug))
+        _send_msg(_bug_change_msg(newbug), irc, channels)
     elif len(oldbug.longdescs) != len(newbug.longdescs):
-        irc.reply(_bug_commented_msg(newbug))
+        _send_msg(_bug_commented_msg(newbug), irc, channels)
 
 
 class BzPluginError(Exception):
@@ -232,9 +241,9 @@ class _Watch(object):
                 if not newbugs[i]:
                     continue
                 try:
-                    poll_cb(self.bugs[i], newbugs[i])
+                    poll_cb(self.bugs[i], newbugs[i], self)
                 except IndexError:
-                    poll_cb(None, newbugs[i])
+                    poll_cb(None, newbugs[i], self)
             self._store_bugs(newbugs)
 
     @staticmethod
@@ -408,9 +417,9 @@ class Bz(callbacks.PluginRegexp):
 
     def __init__(self, irc):
 
-        def poll_cb(oldbug, newbug):
+        def poll_cb(oldbug, newbug, watch):
             ''' Report diffs in newbug state compared to oldbug. '''
-            _on_bug_change(oldbug, newbug, irc)
+            _on_bug_change(oldbug, newbug, watch, irc)
 
         callbacks.PluginRegexp.__init__(self, irc)
         self.watches = _Watches()
@@ -523,9 +532,9 @@ class Bz(callbacks.PluginRegexp):
         Poll a named watch, or all if none given.
         """
 
-        def watch_cb(oldbug, newbug):
+        def watch_cb(oldbug, newbug, watch):
             ''' Report if newbug is changed compared to oldbug. '''
-            _on_bug_change(oldbug, newbug, irc)
+            _on_bug_change(oldbug, newbug, watch, irc)
 
         if watchname:
             watch = self.watches.get_by_name(watchname)
