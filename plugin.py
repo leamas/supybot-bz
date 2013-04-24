@@ -109,6 +109,9 @@ def _send_msg(text, irc, channels):
 def _on_bug_change(oldbug, newbug, watch, irc):
     ''' Report diffs in newbug state compared to oldbug. '''
     channels = config.watch_option(watch.name, 'channels').value
+    if not newbug:
+        watch.log.warning("_on_bug_change: Bad newbug")
+        return
     if not oldbug:
         _send_msg(_new_bug_msg(newbug), irc, channels)
     if oldbug.status != newbug.status:
